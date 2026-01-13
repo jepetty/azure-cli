@@ -133,6 +133,9 @@ class ContainerAppEnvCreateDecorator(ContainerAppEnvDecorator):
     def get_argument_enable_workload_profiles(self):
         return self.get_param("enable_workload_profiles")
 
+    def get_argument_environment_mode(self:):
+        return self.get_param("environment_mode")   
+
     def get_argument_infrastructure_resource_group(self):
         return self.get_param("infrastructure_resource_group")
 
@@ -169,6 +172,8 @@ class ContainerAppEnvCreateDecorator(ContainerAppEnvDecorator):
             if not self.get_argument_enable_workload_profiles():
                 raise RequiredArgumentMissingError("Cannot use --infrastructure-resource-group/-i without "
                                                    "--enable-workload-profiles/-w")
+        if self.get_argument_enable_workload_profiles() and self.get_argument_environment_mode() == 'ConsumptionOnly':
+            raise ValidationError("Cannot use '--enable-workload-profiles' with '--environment-mode ConsumptionOnly'. Please update the environment mode, or")
 
     def create(self):
         try:
